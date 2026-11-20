@@ -1,9 +1,37 @@
 # FIELD TI
 
+![FIELD TI — Diagnóstico de campo para Windows](docs/imagens/apresentacao.gif)
+
 O FIELD TI é um aplicativo portátil de diagnóstico para técnicos de campo. Ele reúne testes de hardware e conectividade em um único atendimento e gera um laudo com as medições que sustentam cada resultado.
 
 **Autor** · Lucas Teixeira  
 **Distribuição** · 1.3.7 para Windows 10 e 11 x64
+
+[Baixar para Windows x64](https://github.com/txrlucas7/field-ti/raw/refs/heads/main/FIELD_TI_1.3.7.exe) · [Como usar](#como-usar) · [Bancadas](#o-que-o-aplicativo-mede) · [Validação](#validação)
+
+## O aplicativo por dentro
+
+Prévia da interface da versão 1.3.7. Os valores exibidos na apresentação são ilustrativos.
+
+![Painel inicial do FIELD TI com a navegação e as bancadas de diagnóstico](docs/imagens/home.png)
+
+<details>
+<summary><strong>Ver a bancada de SSD e disco</strong></summary>
+
+A bancada reúne leitura, escrita e integridade do arquivo de teste.
+
+![Tela de SSD e disco, com indicadores e área de telemetria](docs/imagens/ssd.png)
+
+</details>
+
+<details>
+<summary><strong>Ver a avaliação do teclado</strong></summary>
+
+O técnico acompanha as teclas acionadas e registra a avaliação ao final.
+
+![Tela de avaliação manual com a disposição das teclas](docs/imagens/kb.png)
+
+</details>
 
 ## Como usar
 
