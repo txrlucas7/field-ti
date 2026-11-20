@@ -1,0 +1,23 @@
+name: Autoteste do pacote Windows
+on: [push, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  autoteste:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Conferir integridade e iniciar o executável x64
+        shell: pwsh
+        run: |
+          $exe = Resolve-Path .\FIELD_TI_1.3.7.exe
+          $hash = (Get-Content .\SHA256SUMS.txt).Split(' ')[0]
+          if ((Get-FileHash $exe).Hash -ne $hash) { throw "Hash divergente" }
+          $file = Join-Path $PWD 'autoteste.json'
+          $p = Start-Process -FilePath $exe -ArgumentList "--self-check `"$file`"" -PassThru
+          if (!$p.WaitForExit(90000)) { $p.Kill(); throw "Tempo de inicialização excedido" }
+          if ($p.ExitCode -ne 0) { throw "Falha ao iniciar: $($p.ExitCode)" }
+          $check = Get-Content -Raw $file | ConvertFrom-Json
+          if ($check.version -ne '1.3.7' -or !$check.frozen -or !$check.ui -or !$check.webview2_dll) { throw "Pacote incompleto" }
+          $check | Format-List
