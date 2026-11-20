@@ -1,0 +1,37 @@
+name: Capturar prévias da interface
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/previas.yml
+      - interface/index.html
+permissions:
+  contents: write
+jobs:
+  capturar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fotografar o painel e as bancadas
+        shell: bash
+        run: |
+          set -eu
+          mkdir -p docs/imagens
+          for tela in home ssd kb; do
+            python3 - "$tela" <<'PY'
+          import sys
+          from pathlib import Path
+          tela = sys.argv[1]
+          html = Path('interface/index.html').read_text()
+          html = html.replace('</body>', "<script>go('" + tela + "')</script></body>")
+          Path('/tmp/field-preview.html').write_text(html)
+          PY
+            google-chrome --headless --no-sandbox --disable-dev-shm-usage --hide-scrollbars --run-all-compositor-stages-before-draw --virtual-time-budget=3000 --window-size=1440,975 --screenshot="$PWD/docs/imagens/$tela.png" file:///tmp/field-preview.html
+            test -s "docs/imagens/$tela.png"
+          done
+          git add docs/imagens/*.png
+          if ! git diff --cached --quiet; then
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Atualiza as capturas da interface do FIELD TI'
+            git push
+          fi
