@@ -24,7 +24,8 @@ jobs:
           from pathlib import Path
           tela = sys.argv[1]
           html = Path('interface/index.html').read_text()
-          html = html.replace('</body>', "<script>go('" + tela + "')</script></body>")
+          head, end, tail = html.rpartition('</body>')
+          html = head + ( "<script>go('" + tela + "')</script>") + end + tail
           Path('/tmp/field-preview.html').write_text(html)
           PY
             google-chrome --headless --no-sandbox --disable-dev-shm-usage --hide-scrollbars --run-all-compositor-stages-before-draw --virtual-time-budget=3000 --window-size=1440,975 --screenshot="$PWD/docs/imagens/$tela.png" file:///tmp/field-preview.html
